@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link  rel="stylesheet" href="index.css">
+</head>
+<script>
+    if (localStorage.getItem("name") != ""){
+        window.location = "album.html";
+    }
+</script>
+<body class="body1">
+
+    <h2>Log In</h2>
+    <p id="demo"></p>
+    <div class="loginBox">
+        <form class="center" >
+            <h1>Welcome Back</h1>
+            <p>Welcome back! Please enter your Details</p>
+            <label>User Name</label><br>
+            <input id="Name" type="text" placeholder="User Name"><br>
+            <label>Password</label><br>
+            <input id="Password" type="password"><br>
+            <!-- <input type="submit" value="Sign In" > -->
+            <button type="button" onclick="validateUser()" >Sign in</button>
+            
+        </form>
+    </div>
+    
+    <script>
+
+        function validateUser(){
+            var uName = document.getElementById('Name').value;
+            var pwd = document.getElementById('Password').value;
+
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                const myObj = JSON.parse(this.responseText);
+                // console.log(myObj);
+                // console.log("1");
+
+                let users = myObj.users;
+            for (let x in users) {
+            
+                if (users[x].username == uName && users[x].password == pwd){
+                    localStorage.setItem("name", uName);
+                    console.log(localStorage.name);
+                    // localStorage.getItem("name");
+                    document.getElementById("demo").innerHTML = 'Hello <b>' + localStorage.getItem("name") + '</b> you are logged In';
+                    window.location= "album.html";
+
+                }
+                };
+
+                if (localStorage.name == ""){
+                    document.getElementById("demo").innerHTML = 'Invalid login!';
+                    alert("Invalid login!");
+                };
+                }
+               
+            xhttp.open("GET", "users.json");
+            xhttp.send();
+        };
+
+        
+        
+    </script>
+</body>
+</html>

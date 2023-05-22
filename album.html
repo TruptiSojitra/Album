@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Albums</title>
+    <link href="albums.css" rel="stylesheet">
+    <script>
+        function logOut(){
+            localStorage.setItem ("name", "");
+            window.location = "index.html";
+        }
+
+        
+    </script>
+
+    
+</head>
+<body>
+    <div class="head">
+        <div id="userInfo">
+        </div>
+        <button id="logOut" onclick="logOut()">Log out</button>
+    </div>
+    
+    <div id="popUpImg"></div>
+    <div id="modal-bg"></div>
+    
+    <h1>User Album  </h1>
+    <p id="demo"></p>
+    <p id="albumDetail"></p>
+    
+    
+    
+    
+    
+    
+
+    <script>
+        const xmlhttp = new XMLHttpRequest();
+        xmlhttp.onload = function() {
+        const myObj = JSON.parse(this.responseText);
+        const albums = myObj.albums;
+        let html = "";
+        for (let x in albums){
+            
+            html += `<div class="userAlbums" onclick="callAlbum(`+ myObj.albums[x].album_id+`)">
+            <img src="`+ myObj.albums[x].album_image_url + `" ><br>
+            <span ><b> ` + myObj.albums[x].title + `</b> </span><br>
+            <span > ` + myObj.albums[x].date + ` </span>
+            </div>`;
+
+
+            let myDate= new Date(myObj.albums[0].date);
+            console.log(myObj.albums[x].album_id);
+            console.log(myObj.albums[x].album_image_url);
+
+        }
+
+        document.getElementById("demo").innerHTML =  html;
+        }
+        xmlhttp.open("GET", "albums.json");
+        xmlhttp.send();
+
+        function callAlbum(id){
+                const xmlhttp = new XMLHttpRequest();
+                xmlhttp.onload = function() {
+                const myObj = JSON.parse(this.responseText);
+                const Images = myObj.images;
+                let html1 = "";
+                for (let x in Images){
+
+                    html1 += `<div class="userAlbum" onclick="popUp(`+Images[x].image_id+`)">
+                    <img id="image" src="`+ Images[x].image_url + `" ><br>
+                    <span ><b> ` + Images[x].image_title + `</b> </span><br>                    
+                    </div>`;
+                }
+                document.getElementById("albumDetail").innerHTML =  html1;
+
+                
+
+                }
+                let albumName = "album_"+id+"_images.json";
+                xmlhttp.open("GET", albumName);    
+                xmlhttp.send();
+            }
+    
+            function popUp(imgId){
+                let url = "images/"+imgId+".jpg";
+                console.log(url);
+                document.getElementById("popUpImg").style.display="block";
+                document.getElementById("modal-bg").style.display="block";
+                let html3=""; 
+                html3 += `<img src="`+url+`">
+                        <button id="close" onclick="closeBtn()">X</button>`;
+                
+                document.getElementById('popUpImg').innerHTML= html3;
+                document.getElementById("modal-bg").style.display="block";                
+                }
+
+                function closeBtn(){
+                document.getElementById("popUpImg").style.display="none";
+                document.getElementById("modal-bg").style.display="none";
+                }       
+
+    </script>
+    <script>
+   
+               
+    </script>
+    
+    <script>
+        if (localStorage.getItem("name") == ""){
+            window.location = "index.html";
+        }else{
+            document.getElementById("userInfo").innerHTML= "Hi! <b>"+localStorage.getItem("name").toUpperCase() + "</b>  you are logged In.";
+        }
+        
+    </script>
+
+        
+    
+</body>
+</html>
